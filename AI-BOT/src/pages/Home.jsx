@@ -45,22 +45,28 @@ function Home(){
     }
 
     async function handleGenerateImg(){
-    setStartRes(true)
-    setPrevFeature(feature)
-    setGenImgUrl("")
-    prevUser.prompt = input
+        if (!input.trim()) {
+            console.error("No prompt provided for image generation");
+            return;
+        }
 
-    let result = await query(input).then((e)=>{
-        let url = URL.createObjectURL(e)
-        setGenImgUrl(url)
-    }).catch((err) => {
-        console.error("Image generation failed:", err);
-        setGenImgUrl("error"); // Optional: show error state
-    })
+        setStartRes(true)
+        setPrevFeature(feature)
+        setGenImgUrl("")
+        prevUser.prompt = input
+        
+        try {
+            const imageBlob = await query(input);
+            const url = URL.createObjectURL(imageBlob);
+            setGenImgUrl(url);
+        } catch (err) {
+            console.error("Image generation failed:", err);
+            setGenImgUrl("error");
+        }
 
-    setInput("")
-    setFeature("chat")
-}
+        setInput("")
+        setFeature("chat")
+    }
 
     return (
         <div className='home'>
@@ -86,7 +92,7 @@ function Home(){
                         
                     </div>
 
-                    <div className="genImage"  onClick={()=>setFeature("genimage")}>
+                    <div className="genImage"  onClick={()=>setFeature("genImage")}>
                         <RiImageAiFill />
                         <span>Generate Image</span>
 
@@ -108,7 +114,7 @@ function Home(){
             <form className="input-box" onSubmit={ (e)=>{
                 e.preventDefault()
                 if(input){
-                    if(feature=="genimage"){
+                    if(feature=="genImage"){
                         handleGenerateImg()
                     }
                     else{
@@ -138,7 +144,7 @@ function Home(){
                 <div id='add' onClick={()=>{
                     setPopUp(prev=>!prev)
                 }}>
-                    {feature=="genimage" ? <RiImageAiFill  id="genImage" /> : <FaPlus /> }
+                    {feature=="genImage" ? <RiImageAiFill  id="genImage" /> : <FaPlus /> }
                     
 
                 </div>

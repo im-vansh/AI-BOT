@@ -15,7 +15,13 @@ function Chat(){
                 {prevFeature=="genImage" 
                 ?
                 <>
-                {!genImgUrl? <span>Generating Image....</span>: <img src={genImgUrl} alt="" /> }
+                {!genImgUrl ? 
+                    <span>Generating Image....</span> 
+                    : genImgUrl === "error" ? 
+                    <span style={{color: 'red'}}>❌ Image generation failed. Please try again with a different prompt or check your API configuration.</span>
+                    : 
+                    <img src={genImgUrl} alt="Generated image" style={{maxWidth: '400px', borderRadius: '8px'}} />
+                }
                 </>
                 :
                 !showResult
